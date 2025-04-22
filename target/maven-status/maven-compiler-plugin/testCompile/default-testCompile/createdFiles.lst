@@ -1,0 +1,7 @@
+com/example/tests/smoke/HomepageSmokeTest.class
+com/example/core/BaseTest.class
+com/example/tests/security/WebSecurityTest.class
+com/example/tests/unit/CalculatorTest.class
+com/example/tests/regression/FilterFunctionalityRegressionTest.class
+com/example/tests/performance/AdvancedPerformanceTest.class
+com/example/tests/e2e/BrowseAndSearchE2ETest.class
