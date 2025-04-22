@@ -8,7 +8,7 @@ A comprehensive test automation framework for [Chrono24](https://www.chrono24.de
 - Support for multiple browsers (Chrome, Firefox, Edge, Safari)
 - Parallel test execution
 - Headless mode support
-- Detailed reporting with ExtentReports
+- Detailed reporting with Allure Reports and ExtentReports
 - Environment-specific configuration
 - Support for different test types:
   - Unit tests
@@ -184,21 +184,45 @@ package com.example.tests.smoke;
 import com.example.core.BaseTest;
 import com.example.pages.HomePage;
 import com.example.utils.ExtentReportManager;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
+import io.qameta.allure.Step;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@Epic("Smoke Tests")
+@Feature("Homepage Functionality")
 public class NewSmokeTest extends BaseTest {
 
     @Test(description = "Test description")
+    @Story("Homepage Navigation")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Verify that the homepage loads correctly and all elements are displayed")
     public void testMethod() {
         ExtentReportManager.logInfo("Starting test");
 
-        HomePage homePage = new HomePage(driver);
-        homePage.navigateTo();
-
-        // Test steps and assertions
+        // Using Allure steps for better reporting
+        HomePage homePage = navigateToHomePage();
+        verifyHomePageElements(homePage);
 
         ExtentReportManager.logPass("Test completed successfully");
+    }
+
+    @Step("Navigate to the homepage")
+    private HomePage navigateToHomePage() {
+        HomePage homePage = new HomePage(driver);
+        homePage.navigateTo();
+        return homePage;
+    }
+
+    @Step("Verify homepage elements are displayed correctly")
+    private void verifyHomePageElements(HomePage homePage) {
+        // Test steps and assertions
+        Assert.assertTrue(homePage.isLoaded(), "Homepage is not loaded correctly");
     }
 }
 ```
@@ -215,7 +239,60 @@ The framework supports parallel test execution. Configure the parallel mode and 
 
 ## Reporting
 
-Test reports are generated in the `test-output/reports` directory. Open the HTML report in a browser to view detailed test results.
+### ExtentReports
+
+ExtentReports are generated in the `test-output/reports` directory. Open the HTML report in a browser to view detailed test results.
+
+### Allure Reports
+
+Allure Reports provide a more detailed and interactive reporting experience. The framework is configured to generate Allure reports automatically.
+
+To generate Allure reports after test execution:
+
+```bash
+mvn allure:report
+```
+
+This will generate the Allure report in the `target/allure-report` directory. Open the `index.html` file in a browser to view the report.
+
+To serve the Allure report on a local web server:
+
+```bash
+mvn allure:serve
+```
+
+This will generate the report and open it in your default web browser.
+
+#### Allure Annotations
+
+Allure provides several annotations to enhance test reporting:
+
+- `@Epic`: Defines the epic the test belongs to
+- `@Feature`: Defines the feature being tested
+- `@Story`: Defines the user story
+- `@Severity`: Sets the test severity level
+- `@Description`: Provides a detailed test description
+- `@Step`: Defines a test step for detailed reporting
+
+Example usage:
+
+```java
+@Epic("Authentication")
+@Feature("Login")
+public class LoginTest extends BaseTest {
+
+    @Test
+    @Story("Valid Login")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Test valid user login with correct credentials")
+    public void testValidLogin() {
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login("validuser", "validpassword");
+
+        Assert.assertTrue(loginPage.isLoggedIn());
+    }
+}
+```
 
 ## Logging
 
@@ -288,6 +365,49 @@ The framework also includes JMeter-based security tests:
   - XSS attacks
   - SQL Injection attacks
   - CSRF vulnerabilities
+
+## Continuous Integration
+
+The framework uses GitHub Actions for continuous integration and deployment. The CI/CD pipeline is configured to:
+
+1. Build the project
+2. Run tests
+3. Generate Allure reports
+4. Deploy Allure reports to GitHub Pages
+
+### GitHub Actions Workflow
+
+The GitHub Actions workflow is defined in the `.github/workflows/maven.yml` file. The workflow is triggered on:
+
+- Push to the main/master branch
+- Pull requests to the main/master branch
+
+The workflow includes the following steps:
+
+1. Check out the code
+2. Set up JDK 11
+3. Build the project with Maven
+4. Run tests
+5. Generate Allure reports
+6. Upload Allure reports as artifacts
+7. Deploy Allure reports to GitHub Pages (only for the main/master branch)
+
+### Viewing Reports
+
+After a workflow run completes, you can view the Allure reports in two ways:
+
+1. **GitHub Pages**: If the workflow was triggered by a push to the main/master branch, the Allure reports are deployed to GitHub Pages. You can access them at `https://<username>.github.io/<repository-name>/`.
+
+2. **Workflow Artifacts**: For all workflow runs, the Allure reports are uploaded as artifacts. You can download them from the workflow run page on GitHub.
+
+### Customizing the Workflow
+
+You can customize the GitHub Actions workflow by editing the `.github/workflows/maven.yml` file. For example, you can:
+
+- Change the trigger events
+- Add more test commands
+- Configure email notifications
+- Add more deployment steps
 
 ## Contributing
 
