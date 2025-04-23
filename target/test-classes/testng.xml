@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="Chrono24 Test Suite" parallel="tests" thread-count="3">
-    
+
     <!-- Unit Tests -->
     <test name="Unit Tests">
         <classes>
             <class name="com.example.tests.unit.CalculatorTest" />
         </classes>
     </test>
-    
+
     <!-- Smoke Tests -->
     <test name="Smoke Tests">
         <parameter name="browser" value="chrome" />
         <classes>
             <class name="com.example.tests.smoke.HomepageSmokeTest" />
+            <class name="com.example.tests.smoke.SearchResultsPageTest" />
         </classes>
     </test>
-    
+
     <!-- Regression Tests -->
     <test name="Regression Tests">
         <parameter name="browser" value="chrome" />
@@ -24,7 +25,7 @@
             <class name="com.example.tests.regression.FilterFunctionalityRegressionTest" />
         </classes>
     </test>
-    
+
     <!-- End-to-End Tests -->
     <test name="End-to-End Tests">
         <parameter name="browser" value="chrome" />
@@ -32,7 +33,7 @@
             <class name="com.example.tests.e2e.BrowseAndSearchE2ETest" />
         </classes>
     </test>
-    
+
     <!-- Performance Tests -->
     <test name="Performance Tests">
         <parameter name="browser" value="chrome" />
@@ -40,7 +41,7 @@
             <class name="com.example.tests.performance.AdvancedPerformanceTest" />
         </classes>
     </test>
-    
+
     <!-- Security Tests -->
     <test name="Security Tests">
         <parameter name="browser" value="chrome" />
@@ -48,5 +49,5 @@
             <class name="com.example.tests.security.WebSecurityTest" />
         </classes>
     </test>
-    
+
 </suite>

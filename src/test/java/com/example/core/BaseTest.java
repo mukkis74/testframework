@@ -12,9 +12,9 @@ import com.example.utils.DriverManager;
  * Provides common functionality like driver initialization and cleanup.
  */
 public class BaseTest {
-    
+
     protected WebDriver driver;
-    
+
     /**
      * Set up method that runs before each test method.
      * Initializes the WebDriver instance.
@@ -23,11 +23,11 @@ public class BaseTest {
      */
     @BeforeMethod
     @Parameters(value = {"browser"})
-    public void setUp(String browser) {
+    public void setUp(@org.testng.annotations.Optional("chrome") String browser) {
         // Initialize the WebDriver
         driver = DriverManager.getDriver(browser);
     }
-    
+
     /**
      * Tear down method that runs after each test method.
      * Quits the WebDriver instance.

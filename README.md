@@ -122,6 +122,41 @@ To run tests in headless mode:
 mvn test -Dheadless=true
 ```
 
+### Git Configuration
+
+The repository is configured to automatically push to GitHub after each commit. This is implemented using a Git post-commit hook.
+
+#### How it works
+
+When you make a commit, the post-commit hook automatically pushes the changes to the GitHub repository, ensuring that your remote repository is always up-to-date with your local changes.
+
+#### Manual Setup (if needed)
+
+If you need to set up the automatic push feature manually, follow these steps:
+
+1. Create a post-commit hook file in the `.git/hooks` directory:
+
+```bash
+touch .git/hooks/post-commit
+```
+
+2. Add the following content to the file:
+
+```bash
+#!/bin/sh
+# Automatically push to GitHub after each commit
+echo "Automatically pushing to GitHub..."
+git push origin $(git symbolic-ref --short HEAD)
+```
+
+3. Make the hook executable:
+
+```bash
+chmod +x .git/hooks/post-commit
+```
+
+Now, every time you make a commit, your changes will be automatically pushed to GitHub.
+
 ### Configuration
 
 The framework uses property files for configuration:
