@@ -11,7 +11,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Advanced performance tests for the Chrono24 website.
@@ -172,11 +173,8 @@ public class AdvancedPerformanceTest extends BaseTest {
      * Helper method to wait for page to load completely.
      */
     private void waitForPageLoad() {
-        // Wait for the page to load completely
-        try {
-            TimeUnit.SECONDS.sleep(2); // Basic wait for page load
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        // Wait for the page to load completely using WebDriverWait
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
     }
 }

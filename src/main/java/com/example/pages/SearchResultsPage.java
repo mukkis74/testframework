@@ -10,17 +10,17 @@ import java.util.List;
  * Page object for the Chrono24 search results page.
  */
 public class SearchResultsPage extends BasePage {
-    
+
     // Web elements on the search results page
     @FindBy(css = ".article-item")
     private List<WebElement> watchItems;
-    
+
     @FindBy(css = ".loading-indicator")
     private WebElement loadingIndicator;
-    
+
     @FindBy(css = ".pagination-next")
     private WebElement nextPageButton;
-    
+
     /**
      * Constructor for SearchResultsPage.
      * 
@@ -30,7 +30,7 @@ public class SearchResultsPage extends BasePage {
         super(driver);
         waitForPageToLoad();
     }
-    
+
     /**
      * Wait for search results to load.
      */
@@ -38,13 +38,13 @@ public class SearchResultsPage extends BasePage {
         try {
             // Wait for loading indicator to disappear
             wait.until(driver -> !isElementDisplayed(loadingIndicator));
-            // Wait a bit more to ensure results are fully loaded
-            Thread.sleep(1000);
+            // Wait for results to be fully loaded
+            wait.until(driver -> !watchItems.isEmpty());
         } catch (Exception e) {
             // Loading indicator might not be present, so ignore any exceptions
         }
     }
-    
+
     /**
      * Click on a watch item.
      * 
@@ -58,7 +58,7 @@ public class SearchResultsPage extends BasePage {
             throw new IndexOutOfBoundsException("Watch item index out of bounds: " + index);
         }
     }
-    
+
     /**
      * Check if search results are displayed.
      * 
@@ -67,7 +67,7 @@ public class SearchResultsPage extends BasePage {
     public boolean areResultsDisplayed() {
         return !watchItems.isEmpty();
     }
-    
+
     /**
      * Go to the next page of search results.
      */
