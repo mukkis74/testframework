@@ -1,6 +1,6 @@
 # Chrono24 Test Automation Framework
 
-A comprehensive test automation framework for [Chrono24](https://www.chrono24.de/) based on Selenium WebDriver, TestNG, and Java.
+A comprehensive test automation framework for [Chrono24](https://www.chrono24.de/) based on Selenium WebDriver, Playwright, TestNG, and Java.
 
 ## Features
 
@@ -18,6 +18,14 @@ A comprehensive test automation framework for [Chrono24](https://www.chrono24.de
   - End-to-End tests
   - Performance tests (JMeter integration)
   - Security tests
+- Multiple automation frameworks:
+  - Selenium WebDriver for traditional browser automation
+  - Playwright for modern browser automation with:
+    - Faster and more reliable tests
+    - Auto-wait capabilities
+    - Network interception
+    - Mobile device emulation
+    - Better iframe handling
 
 ## Project Structure
 
@@ -27,41 +35,47 @@ A comprehensive test automation framework for [Chrono24](https://www.chrono24.de
 │   │   └── java
 │   │       └── com
 │   │           └── example
-│   │               └── Calculator.java
+│   │               ├── pages
+│   │               │   ├── BasePage.java
+│   │               │   ├── HomePage.java
+│   │               │   ├── PlaywrightBasePage.java
+│   │               │   ├── PlaywrightHomePage.java
+│   │               │   ├── PlaywrightSearchResultsPage.java
+│   │               │   ├── SearchResultsPage.java
+│   │               │   ├── ContactSellerPage.java
+│   │               │   ├── ForgotPasswordPage.java
+│   │               │   ├── LoginPage.java
+│   │               │   ├── RegistrationPage.java
+│   │               │   └── WatchDetailPage.java
+│   │               └── utils
+│   │                   ├── ConfigManager.java
+│   │                   ├── DriverManager.java
+│   │                   ├── PlaywrightManager.java
+│   │                   └── ExtentReportManager.java
 │   └── test
 │       ├── java
 │       │   └── com
 │       │       └── example
 │       │           ├── core
-│       │           │   └── BaseTest.java
-│       │           ├── pages
-│       │           │   ├── BasePage.java
-│       │           │   ├── ContactSellerPage.java
-│       │           │   ├── ForgotPasswordPage.java
-│       │           │   ├── HomePage.java
-│       │           │   ├── LoginPage.java
-│       │           │   ├── RegistrationPage.java
-│       │           │   ├── SearchResultsPage.java
-│       │           │   └── WatchDetailPage.java
-│       │           ├── tests
-│       │           │   ├── e2e
-│       │           │   │   └── BrowseAndSearchE2ETest.java
-│       │           │   ├── performance
-│       │           │   │   └── AdvancedPerformanceTest.java
-│       │           │   ├── regression
-│       │           │   │   └── FilterFunctionalityRegressionTest.java
-│       │           │   ├── security
-│       │           │   │   └── WebSecurityTest.java
-│       │           │   ├── smoke
-│       │           │   │   └── HomepageSmokeTest.java
-│       │           │   ├── system
-│       │           │   │   └── PerformanceSystemTest.java
-│       │           │   └── unit
-│       │           │       └── SampleUnitTest.java
-│       │           └── utils
-│       │               ├── ConfigManager.java
-│       │               ├── DriverManager.java
-│       │               └── ExtentReportManager.java
+│       │           │   ├── BaseTest.java
+│       │           │   └── PlaywrightBaseTest.java
+│       │           └── tests
+│       │               ├── e2e
+│       │               │   └── BrowseAndSearchE2ETest.java
+│       │               ├── performance
+│       │               │   └── AdvancedPerformanceTest.java
+│       │               ├── regression
+│       │               │   └── FilterFunctionalityRegressionTest.java
+│       │               ├── security
+│       │               │   └── WebSecurityTest.java
+│       │               ├── smoke
+│       │               │   ├── HomepageSmokeTest.java
+│       │               │   ├── PlaywrightSearchResultsPageTest.java
+│       │               │   └── SearchResultsPageTest.java
+│       │               ├── system
+│       │               │   └── PerformanceSystemTest.java
+│       │               └── unit
+│       │                   └── SampleUnitTest.java
 │       └── resources
 │           ├── config.dev.properties
 │           ├── config.properties
@@ -80,6 +94,7 @@ A comprehensive test automation framework for [Chrono24](https://www.chrono24.de
 - Java 11 or higher
 - Maven 3.6.0 or higher
 - Browsers: Chrome, Firefox, Edge, or Safari
+- For Playwright: Node.js 14 or higher (automatically managed by Playwright Maven plugin)
 
 ## Getting Started
 
@@ -121,6 +136,35 @@ To run tests in headless mode:
 ```bash
 mvn test -Dheadless=true
 ```
+
+### Running Playwright Tests
+
+Playwright tests can be run using the same commands as Selenium tests. The framework will automatically use the appropriate test base class based on the test class being executed.
+
+To run Playwright tests with a specific browser:
+
+```bash
+mvn test -Dbrowser=webkit
+```
+
+Supported browser values for Playwright:
+- `chromium` (default)
+- `firefox`
+- `webkit` (Safari)
+
+To run a specific Playwright test class:
+
+```bash
+mvn test -Dtest=PlaywrightSearchResultsPageTest
+```
+
+To install Playwright browsers (first time only):
+
+```bash
+mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install"
+```
+
+> **Note:** When implementing Playwright tests for your specific application, you may need to update the CSS selectors in the page objects to match your application's structure. The selectors provided in the example page objects are based on the Chrono24 website and may need to be adjusted for your specific use case. Use Playwright's debugging tools like `page.pause()` or browser developer tools to identify the correct selectors for your application.
 
 ### Git Configuration
 
@@ -173,7 +217,7 @@ mvn test -Dapp.url=https://www.chrono24.com/ -Ddriver.implicit.wait=15
 
 ## Adding New Tests
 
-### Creating a Page Object
+### Creating a Selenium Page Object
 
 1. Create a new class in the `com.example.pages` package
 2. Extend the `BasePage` class
@@ -205,7 +249,37 @@ public class NewPage extends BasePage {
 }
 ```
 
-### Creating a Test Class
+### Creating a Playwright Page Object
+
+1. Create a new class in the `com.example.pages` package
+2. Extend the `PlaywrightBasePage` class
+3. Define CSS selectors as constants
+4. Implement methods for interacting with the page
+
+Example:
+
+```java
+package com.example.pages;
+
+import com.microsoft.playwright.*;
+
+public class NewPlaywrightPage extends PlaywrightBasePage {
+
+    // CSS selectors for elements on the page
+    private static final String ELEMENT_SELECTOR = ".element-selector";
+
+    public NewPlaywrightPage(Page page) {
+        super(page);
+        waitForPageToLoad();
+    }
+
+    public void performAction() {
+        click(ELEMENT_SELECTOR);
+    }
+}
+```
+
+### Creating a Selenium Test Class
 
 1. Create a new class in the appropriate test package (e.g., `com.example.tests.smoke`)
 2. Extend the `BaseTest` class
@@ -258,6 +332,52 @@ public class NewSmokeTest extends BaseTest {
     private void verifyHomePageElements(HomePage homePage) {
         // Test steps and assertions
         Assert.assertTrue(homePage.isLoaded(), "Homepage is not loaded correctly");
+    }
+}
+```
+
+### Creating a Playwright Test Class
+
+1. Create a new class in the appropriate test package (e.g., `com.example.tests.smoke`)
+2. Extend the `PlaywrightBaseTest` class
+3. Implement test methods using TestNG annotations
+
+Example:
+
+```java
+package com.example.tests.smoke;
+
+import com.example.core.PlaywrightBaseTest;
+import com.example.pages.PlaywrightHomePage;
+import com.example.utils.ExtentReportManager;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+@Epic("Smoke Tests")
+@Feature("Homepage Functionality")
+public class NewPlaywrightSmokeTest extends PlaywrightBaseTest {
+
+    @Test(description = "Test description")
+    @Story("Homepage Navigation")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Verify that the homepage loads correctly and all elements are displayed")
+    public void testMethod() {
+        ExtentReportManager.logInfo("Starting test");
+
+        // Initialize the PlaywrightHomePage and navigate to it
+        PlaywrightHomePage homePage = new PlaywrightHomePage(page);
+        homePage.navigateTo();
+
+        // Verify homepage elements are displayed correctly
+        Assert.assertTrue(homePage.isLoaded(), "Homepage is not loaded correctly");
+
+        ExtentReportManager.logPass("Test completed successfully");
     }
 }
 ```
