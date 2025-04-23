@@ -5,7 +5,7 @@ This document provides information about the tests added to the Chrono24 Test Au
 ## Types of Tests Added
 
 ### Unit Tests
-- **CalculatorTest**: Tests the basic functionality of the Calculator class, including addition, subtraction, multiplication, and division operations.
+- **ExtentReportManagerTest**: Tests the functionality of the ExtentReportManager utility class, including report initialization, test creation, and logging operations.
 
 ### Smoke Tests
 - **HomepageSmokeTest**: Verifies that the basic functionality of the homepage is working correctly, including page loading and search functionality.
@@ -53,13 +53,13 @@ mvn test -DsuiteXmlFile=src/test/resources/testng.xml
 To run a specific test class, use the following Maven command:
 
 ```bash
-mvn test -Dtest=com.example.tests.unit.CalculatorTest
+mvn test -Dtest=com.example.tests.unit.ExtentReportManagerTest
 ```
 
 You can also run multiple test classes:
 
 ```bash
-mvn test -Dtest=com.example.tests.unit.CalculatorTest,com.example.tests.smoke.HomepageSmokeTest
+mvn test -Dtest=com.example.tests.unit.ExtentReportManagerTest,com.example.tests.smoke.HomepageSmokeTest
 ```
 
 ### Running Specific Test Types

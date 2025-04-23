@@ -5,7 +5,7 @@
     <!-- Unit Tests -->
     <test name="Unit Tests">
         <classes>
-            <class name="com.example.tests.unit.CalculatorTest" />
+            <class name="com.example.tests.unit.ExtentReportManagerTest" />
         </classes>
     </test>
 
